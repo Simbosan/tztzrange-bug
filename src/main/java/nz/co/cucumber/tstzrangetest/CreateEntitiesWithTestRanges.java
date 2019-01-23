@@ -29,12 +29,18 @@ public class CreateEntitiesWithTestRanges implements ApplicationRunner {
             rangeNoDST.setRange(Range.zonedDateTimeRange("[2018-05-28T16:00:02+12,2018-08-28T16:00:05+12]"));
             repo.save(rangeNoDST);
         }
-
-        // If such a document exists, the exception will be thrown by the next line.
-        // To see this, comment out/delete the DROP TABLE line from the schema.sql in resources.
         
-        // If the document is newly created you can see the error by viewing the repo from the browser
-        // localhost:8080/entityWithRanges
+        /** To reproduce either
+         * Run once as is then try to view the repository via the REST endpoint at
+         * localhost:8080/entityWithRanges.  
+         * 
+         * OR
+         * 
+         * Delete the DROP TABLE line from schema.sql and run twice.
+         * The second time a document will exist by the name CROSSES_DST_NAME
+         * and the exception will be thrown by the findByName(CROSSES_DST_NAME) call below
+         */
+
         EntityWithRange rangeCrossesDST = repo.findByName(CROSSES_DST_NAME);
         if (rangeCrossesDST == null) {
             rangeCrossesDST = new EntityWithRange();
